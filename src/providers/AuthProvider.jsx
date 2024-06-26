@@ -28,9 +28,19 @@ const AuthProvider = ({children}) => {
 
     useEffect(() => {
         const unSubscribe = onAuthStateChanged(auth, currentUser => {
+            const userEmail = currentUser?.email || user?.email;
+            const loggedUser = {email: userEmail};
             setUser(currentUser);
             console.log('Current User:', currentUser);
             setLoading(false);
+            if(currentUser){
+                axios.post('https://backend-car-doctor.vercel.app/jwt', loggedUser, { withCredentials: true})
+                .then(res => console.log('token response: ',res.data));
+            }
+            else{
+                axios.post('https://backend-car-doctor.vercel.app/logout', loggedUser, {withCredentials: true})
+                .then(res => console.log(res.data))
+            }
         });
 
         return () => unSubscribe();

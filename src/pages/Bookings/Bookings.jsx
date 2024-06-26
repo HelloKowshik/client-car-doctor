@@ -3,17 +3,19 @@ import BookingRow from './BookingRow';
 import { useEffect, useContext, useState } from 'react';
 import Swal from 'sweetalert2';
 import axios from 'axios';
+import useAxiosSecure from '../../hooks/useAxiosSecure'; 
 
 const Bookings = () => {
     const { user } = useContext(AuthContext);
+    const axiosSecure = useAxiosSecure();
     const [bookings, setBookings] = useState([]);
-    const url = `http://localhost:5000/bookings?email=${user?.email}`;
+    const url = `/bookings?email=${user?.email}`;
 
     useEffect(() => {
-        axios.get(url, {withCredentials:true})
+        axiosSecure.get(url)
         .then(res => setBookings(res.data))
         .catch(err => console.log(err));
-    }, [url]);
+    }, [url, axiosSecure]);
 
     const handleDelete = id => {
         Swal.fire({
@@ -26,7 +28,7 @@ const Bookings = () => {
           confirmButtonText: "Yes"
           }).then((result) => {
               if (result.isConfirmed) {
-                  fetch(`http://localhost:5000/bookings/${id}`, {
+                  fetch(`https://backend-car-doctor.vercel.app/bookings/${id}`, {
                       method: 'DELETE'
                     })
                   .then(res => res.json())
@@ -54,7 +56,7 @@ const Bookings = () => {
           confirmButtonText: "Yes"
           }).then((result) => {
               if (result.isConfirmed) {
-                  fetch(`http://localhost:5000/bookings/${id}`, {
+                  fetch(`https://backend-car-doctor.vercel.app/bookings/${id}`, {
                       method: 'PATCH',
                       headers:{
                         'Content-Type': 'application/json'
@@ -66,7 +68,7 @@ const Bookings = () => {
                       if(data.modifiedCount > 0){
                           Swal.fire({
                             title: "Updated!",
-                            text: "Your file has been Updated.",
+                            text: "Your Order has been Updated.",
                             icon: "success"
                           });
                           const remainingBookings = bookings.filter(booking => booking._id !== id);

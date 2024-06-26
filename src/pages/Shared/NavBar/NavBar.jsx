@@ -1,11 +1,10 @@
 import { Link } from 'react-router-dom';
 import logo from '../../../assets/logo.svg';
-import { AuthContext } from '../../../providers/AuthProvider';
-import { useContext } from 'react';
 import Swal from 'sweetalert2';
+import useAuth from '../../../hooks/useAuth';
 
 const NavBar = () => {
-  const { user, signOutUser} = useContext(AuthContext);
+  const { user, signOutUser} = useAuth();
   const handleLogOut = () => {
     signOutUser()
     .then(() => {
@@ -50,7 +49,6 @@ const NavBar = () => {
       <Link to='/bookings' className="btn btn-warning mr-5">My Bookings</Link>
     </> : <Link to='/login' className="btn btn-warning mr-5">Login</Link>
   }
-    <button className="btn btn-warning">Appointment</button>
   </div>
 </div>
     );
